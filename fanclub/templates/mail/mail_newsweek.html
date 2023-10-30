@@ -1,0 +1,23 @@
+{% extends "mail/base_mail.html" %}
+{% load custom_filters %}
+{% block main_content %}
+    <div style="text-align:center">
+        <div style="color:black">
+            <h2> {{ user.user.username}} {{ user.user.first_name}}!</h2>
+            <p> Вы получили это письмо на адрес:{{user.user.email}}, потому что являетесь геймером клуба "FanClub"<br>
+                За неделю в нашем клубе появились следующие объявления: </p>
+                {% if post_foruser %}
+                    {% for post in post_foruser %}
+                        <p>Название: {{ post.title }} Автор: {{post.author.user.username}} ({{post.author.user.first_name}} {{post.author.user.last_name}})</p>
+                        <a href="http://localhost:8000{% url 'o_post' post.id %}">посмотреть объявление</a>
+                    {% endfor %}
+                {% else %}
+                    <p> На этой неделе новых публикаций  нет </p>
+                        <a href="http://localhost:8000{% url 'home' %}">ссылка на главную стрницу сайта </a>
+                    </p>
+                {% endif %}
+        
+              
+        </div>
+    </div>
+{% endblock main_content %}

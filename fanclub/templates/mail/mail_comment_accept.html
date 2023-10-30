@@ -1,0 +1,14 @@
+{% block main_content %}
+    <div style="text-align:center">
+        <div style="color:black">
+            <h2> {{ user.first_name}} ({{ user.username}} )!</h2>
+            <p> Ваш комментарий к посту {{post.title}}   принят автором {{post.author.user.username}}.</p> 
+            <p>Тест вашего  комментария(отрывок):" {{comment.preview}} "</p>
+
+                    
+            <a href="http://127.0.0.1:8000{% url 'o_post' post.id %}"> Перейти к комментарию</a>
+
+          
+       
+    </div>
+{% endblock main_content %}

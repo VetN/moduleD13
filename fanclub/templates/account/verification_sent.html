@@ -1,0 +1,24 @@
+{% extends "account/base.html" %}
+{% load account %}
+#{% user_display user %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Подтведите свой E-mail адрес" %}{% endblock %}
+{% block content%}
+<div class="container" data-aos="fade-up" >
+    <div class=" align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="100%">
+        
+            <div class="get-started-btn_f scrollto " style="text-align:center" >   
+                <h2>{% trans "ПОЖАЛУЙСТА, ПОДТВЕРДИТЕ СВОЙ E-mail АДРЕC" %}</h2> 
+                <h2>  {{user_display}}!</h2>
+                <p style="text-align:center"> На почту, адрес которой вы указали при регистрации, отправлено письмо.<br>
+                    Подтвердите почту,перейдя по ссылке, которая находится в этом письме.
+                </p>
+            </div>
+       
+    </div>
+</div>
+
+{% endblock content %}
+
+

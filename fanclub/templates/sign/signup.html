@@ -1,0 +1,20 @@
+{% extends 'flatpages/default.html'%}
+
+{% block title %}
+Register
+{% endblock title %}
+
+{% block main_content %}
+<h2>
+ Register
+</h2>
+<div style="color:white">
+<form method="post">
+{% csrf_token %}
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" value="Send">
+</form>
+</div>
+{% endblock main_content %}

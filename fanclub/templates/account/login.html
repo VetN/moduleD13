@@ -1,0 +1,53 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+  
+
+            <h2>{% trans "ВХОД" %}</h2>
+
+              {% get_providers as socialaccount_providers %}
+
+                {% if socialaccount_providers %}
+                  <p>
+                    {% blocktrans with site.name as site_name %}
+                      Пожалуйста, войдите с помощью одной из своих учетных записей:<br>
+  
+                    {% endblocktrans %}
+                  </p>
+
+                  <div class="socialaccount_ballot">
+                    <ul style="list-style-type: none" class="socialaccount_providers">
+                      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                    </ul>
+                  </div>
+                  {% include "socialaccount/snippets/login_extra.html" %}
+                  
+                  <a href="{{ signup_url }}"  class="my_btn_1" >ЗАРЕГИСТРИРОВАТЬСЯ НА САЙТЕ</a>
+                  <br>
+                  <br>
+                  <p>или войдите по паролю</p>
+                  
+                  <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "забыли пароль?" %}</a>
+                    <button type="submit"  style="color:black; margin-top:30px; padding: 3px 20px;">{% trans "ВОЙТИ" %}</button>
+                  </form>
+                {% else %}
+                  <p>
+                    {% blocktrans %}Если у вас нет аккаунта, то зарегистрируйтесь
+                      <a href="{{ signup_url }}">ЗАРЕГИСТРИРОВАТЬСЯ</a>
+                    {% endblocktrans %}
+                  </p>
+                {% endif %}
+          
+       
+{% endblock %}

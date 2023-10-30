@@ -1,0 +1,126 @@
+{% extends 'flatpages/default.html'%}
+{% load custom_filters %}
+
+
+{% block main_content %}
+<div style="text-align: center">
+    <h2>  ПРОФИЛЬ ГЕЙМЕРА <br> 
+        {{ profile.user.first_name}} {{ profile.user.last_name}} ({{profile.user.username}} )! 
+    </h2>
+</div>
+
+
+<div class="col-md-4 " style="display: inline-block; vertical-align: top; max-width: 100%">
+      
+    <div class="text p-4" style="text-align: center" >
+        <div class="mb-2"style="border:thick double  #555555; padding: 10px;"  > 
+            <h2 style="text-align: left; paddind-left: 5px;"> ИНФОРМАЦИЯ:</h2>
+                <div style="display: flex; justify-content: start; margin: 20px">  
+                    <div>
+                        {% if profile.pro_photo  %}
+                            <img style="width:200px; margin:auto;" src='{{profile.pro_photo.url}}'>
+                        {% else %}
+                            <img style="width:200px; margin:auto;" src='../../media/image_photo/no_profile.jpg'>
+                        {% endif %}
+                            
+                    </div>
+                    <div style="margin-left:100px;">
+                        <h5 style="text-align:left; ">ЛИЧНЫЙ САЙТ:  {{profile.site}} </h5>
+                        <h5 style="text-align:left; ">СТРАНИЦА В VK:  {{profile.vk}} </h5><br>
+                        <h5 style="text-align:left; ">РЕЙТИНГ: <b>  {{profile.ratingUser}}</b> </h5>
+                        <h5 style="text-align:left; ">ОПУБЛИКОВАНО ПОСТОВ: <b>  {{post|length}} </b> </h5>
+                        <h5 style="text-align:left; ">КОММЕНТАРИЕВ: <b>  {{comments|length}} </b> </h5>
+                    </div>
+                </div>
+                <div class="mb-2"style="border:thick double  #aaaaaa;"  >
+                    <h4 style="text-align: left; margin: 25px; "> ПОСТЫ ГЕЙМЕРА: </h4><br>
+                    
+                    {% if post %}
+                    
+                        {% for n in post %}
+                            <ul>
+                                <li style="padding-right: 25px;">
+                                    <a style="color: black" class="blog-entry1" href="{% url 'o_post' n.id %}">
+                                        <p style="text-align: left; paddind-left: 15px; ">
+                                            название: <span style="font-size: 20px;"> {{n.title}}</span> 
+                                            категория <span style="font-size: 20px;">{{n.category}}</span> 
+                                            рейтинг <span style="font-size: 20px;">{{n.rating}}</span><br>
+                                        
+                                            <span style="color: #555555">
+                                                <i class="icon-calendar mr-2" style="color: #555555"></i> {{n.dataCreation|date:'d M Y'}}
+                                                {% if n.dataUpdate %}
+                                                    <i class="icon-calendar mr-2" style="color: #555555"></i>редактировано:{{n.dataUpdate|date:'d M Y'}} 
+                                                {% else %} ---
+                                                    <i class="icon-calendar mr-2" style="color: #555555"></i>
+                                                {% endif %}
+                                            </span>
+                                        </p>
+                                        <p class="mb-4" style="text-align:left; padding-left: 30px; border-bottom: dotted 1px; padding-bottom: 20px">{{n.content|truncatewords:10|censor}}</p>
+                                       
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    
+                    {% else %}
+                        <p> У геймера {{profile.user.username}} постов нет </p>
+                    {% endif %}  
+                </div>
+
+                <div class="mb-2"style="border:thick double  #aaaaaa;"  >
+                    <h4 style="text-align: left;  margin: 25px"> КОММЕНТАРИИ ГЕЙМЕРА: </h4> <br>
+                        {% if comments %}
+                            {% for n in comments %}
+                                <ul>
+                                    <li style="padding-right: 25px;">
+                                        <a style="color: black" class="blog-entry1" href="{% url 'o_post' n.commentPost.id %}">
+                                            <p style="text-align: left; paddind-left: 15px; ">
+                                                Комментарий к посту: {{n.commentPost.title}}
+                                                (автор: {{n.commentPost.author.user.username}} ({{n.commentPost.author.user.first_name}} {{n.commentPost.author.user.last_name}}))<br>
+                                                рейтинг:{{n.rating}}<br>
+                                                <span>
+                                                    <i class="icon-calendar mr-2" style="color: #555555"></i>   {{n.dataCreation}}
+                                                </span>
+                                            </p>
+		                                    <p class="mb-4" style="text-align:left; padding-left: 30px; border-bottom: dotted 1px; padding-bottom: 20px">{{n.content}}</p>
+		                                    
+                                        </a>
+                                    </li>
+                                </ul>
+                            {%endfor%}
+                        {% else %}
+                            <h5 style="text-align:right; padding-right: 30px;"> Геймер не оставлял комментариев </h5>
+                        {% endif %}
+                </div>
+
+                <div class="mb-2"style="border:thick double  #aaaaaa;"  >
+                    <h4 style="text-align: left;  margin: 25px"> КОММЕНТАРИИ К ПОСТАМ ГЕЙМЕРА: </h4> <br>
+                        {% if com_post %}
+                            {% for n in com_post %}
+                                <ul>
+                                    <li style="padding-right: 25px;">
+                                        <a style="color: black" class="blog-entry1" href="{% url 'o_post' n.commentPost.id %}">
+                                            <p style="text-align: left; paddind-left: 15px; ">
+                                                Комментарий к посту: {{n.commentPost.title}}
+                                                (автор: {{n.commentUser.username}} ({{n.commentUser.first_name}} {{n.commentUser.last_name}}))<br>
+                                                рейтинг:{{n.rating}}<br>
+                                                <span>
+                                                    <i class="icon-calendar mr-2" style="color: #555555"></i>   {{n.dataCreation}}
+                                                </span>
+                                            </p>
+		                                    <p class="mb-4" style="text-align:left; padding-left: 30px; border-bottom: dotted 1px; padding-bottom: 20px">{{n.content}}</p>
+		                                    
+                                        </a>
+                                    </li>
+                                </ul>
+                            {%endfor%}
+                        {% else %}
+                            <h5 style="text-align:right; padding-right: 30px;"> Геймер не оставлял комментариев </h5>
+                        {% endif %}
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

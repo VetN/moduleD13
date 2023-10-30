@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path, os
+#import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4!qnx+ipmq=dagg^rm29+5)-%59m*=j2*_(kmx@w0xlj#5lt5x'
+SECRET_KEY = 'django-insecure-v8188+ge_cgdb7449++mpt(e!uwzd7ywi&%$a8_bra*j)^tc@f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AUTHENTICATION_BACKENDS = [
+   # Needed to login by username in Django admin, regardless of `allauth`
+   'django.contrib.auth.backends.ModelBackend',
+  
+   # `allauth` specific authentication methods, such as login by e-mail
+   'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 
 # Application definition
@@ -37,6 +46,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.sites',
+	'django.contrib.flatpages',
+
+    'django_apscheduler',
+    'django_filters',
+
+    'fanboard.apps.FanboardConfig',# если делать отдельный файл signals надо указать не имя нашего приложения, а его конфиг, чтобы всё заработало 
+    #'fanboard',  если включаем сигналы в отдельном файле и прописываем их 'news.apps.NewsConfig'
+    
+    'protect',
+    'sign',
+    'mail',
+
+
+    'allauth',
+    'allauth.account',
+    # регистрация через соцсети
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.vk',
+    'allauth.socialaccount.providers.yandex',
+    #'allauth.socialaccount.providers.odnoklassniki',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +79,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'fanclub.urls'
@@ -54,7 +88,9 @@ ROOT_URLCONF = 'fanclub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        #'DIRS': [BASE_DIR/'templates'],мне нужна строка ниже и импорт os
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,9 +151,77 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
+#Префикс до url :   
 STATIC_URL = 'static/'
+
+#Место хранения на диске статичных файлов:  
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# добавили библиотеку bootstrap
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SITE_ID = 1
+
+MEDIA_ROOT = os.path.join(BASE_DIR ,'media/')
+MEDIA_URL = '/media/'
+
+#LOGIN_URL = 'sign/login/'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+
+# регистрация/ авторизация по почте
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True #
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION =   'mandatory'# 'none'  отправление подтверждения на почту при регистрации прописываем
+#ACCOUNT_CONFIRM_EMAIL_ON_GET = True позволит избежать дополнительных действий и активирует аккаунт сразу, как только мы перейдём по ссылке
+#ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS — количество дней, в течение которых будет доступна ссылка на подтверждение регистрации
+
+# для изменение формы signup надо переписать путь
+ACCOUNT_FORMS = {'signup': 'sign.forms.CommonSignupForm',
+                 
+                 'login': 'sign.forms.CommonLoginForm'}
+
+# для почты и рассылок
+
+EMAIL_HOST = 'smtp.yandex.ru' # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465 # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'vet.ness@yandex.ru' # ваше имя пользователя, например если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_SSL = True # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
+
+
+#ADMINS = [
+   # ('имя', 'petechka@yandex.ru'),  список всех админов в формате ('имя', 'их почта')
+#]
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER #  проверка при регистрации строчка прописываемздесь указываем уже свою ПОЛНУЮ почту с которой будут отправляться письма 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# !!! Обязательно включать, когда тестирую почту и регистрацию с отправкой
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #- вкл этой строчки пойдет письмо в консоль
+
+
+# настройки для django_apscheduler
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # формат даты, которую будет воспринимать наш задачник
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # если задача не выполняется за 25 секунд, то она автоматически снимается,
+
+# Указываем, куда будем сохранять кэшируемые файлы! 
+# Не забываем создать папку cache_files внутри папки с manage.py!
+#CACHES = {
+   # 'default': {
+     #   'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+      #  'LOCATION': os.path.join(BASE_DIR, 'cache_files'), 
+      #  'TIMEOUT': 30, # добавляем стандартное время ожидания в минуту (по умолчанию это 5 минут — 300 секунд)
+   # }
+#}

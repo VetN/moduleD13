@@ -1,0 +1,158 @@
+{% extends 'flatpages/default.html'%}
+{% load custom_filters %}
+
+
+{% block main_content %}
+<div style="text-align: center">
+    <h2>  ПРИВЕТСТВУЕМ ВАС<br> 
+        {{ request.user.first_name}} ({{request.user.username}} )!<br> 
+        ВАША ЛИЧНАЯ СТРАНИЦА {{com_post}}
+    </h2>
+
+</div>
+
+
+<div class="col-md-4 " style="display: inline-block; vertical-align: top; max-width: 100%">
+    <div style="text-align: right; padding:25px">
+        <a style="border: solid 1px; padding: 5px" href="{% url 'profile' request.user.id %}" > <b>как меня видят пользователи </b></a><br><br>
+        <a style="border: solid 1px; padding: 5px; " href="{% url 'edit_profile' request.user.id %}" > <b>редактировать профиль </b></a>
+    </div>
+        <div class="text p-4" style="text-align: center" >
+        <div class="mb-2"style="border:thick double  #555555; padding: 10px;"  > 
+            <h2 style="text-align: left; paddind-left: 5px;"> ВАШИ ОБЪЯВЛЕНИЯ</h2>
+            <h4 style="text-align: right; "> У вас есть <b> {{post_user|length}} </b> активных объявления</h4>
+            
+            {% if post_user %}
+                {% for n in post_user_p %}
+                    <a style="color: black" class="blog-entry1" href="{% url 'o_post' n.id %}">
+                        <div class="mb-2"style="border:thick double  #aaaaaa;"  >
+                            <h4>название: <b>{{n.title}}</b> категория {{n.category}}</h4>
+                            <h4 style="text-align:right; padding-right: 30px;"> рейтинг поста: <b>{{n.rating}} </b></h4>
+                            <p style="text-align:left; padding-left: 20px;">
+                                <span><i class="icon-calendar mr-2" style="color: #555555"></i>  дата создания: {{n.dataCreation|date:'d M Y'}} /</span><br>
+                                <span><i class="icon-calendar mr-2" style="color: #555555"></i>дата редактирования: {{n.dataUpdate|date:'d M Y'}}</span>
+                            </p>
+                            <p>
+                                {% if n.photo  %}
+                                    <span> / <b>фото:</b> есть</span>
+                                {% else %}
+                                    <span> / <b>фото:</b> нет</span>
+                                {% endif%}
+                 
+                                {% if one_post.video %}
+                                    <span> / <b>видео:</b> есть</span>
+                                {% else %}
+                                    <span> / <b>видео:</b> нет</span>
+                                {% endif%}
+
+                                {% if one_post.file %}
+                                    <span> / <b>файлы:</b> есть</span>
+                                {% else %}
+                                    <span> / <b>файлы:</b> нет</span>
+                                {% endif %}
+                            </p>
+                            <p class="mb-4" style="text-align:left; padding-left: 30px;">{{n.content|censor}}</p></li>
+                            <div style="text-align: right; padding:25px">
+                                <a style="border: solid 1px; padding: 5px; " href="{% url 'edit_post' n.id %}" > <b>редактировать </b></a>  
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% include '../flatpages/parts/paginator.html' %}
+            {% else %}
+                <p> постов нет </p>
+            {% endif%}
+        </div>
+        <p> {{comment_post}}</p>
+        <h2 style="text-align: left; paddind-left: 5px;">КОММЕНТАРИИ К ВАШИМ ПОСТАМ </h2>
+        <div class="mb-2"style="border:thick double  #555555; padding: 10px;"  >
+            
+
+            <h4 style="text-align:left; paddind-left: 5px;  "> КОММЕНТАРИИ НЕОБХОДИМО ОДОБРИТЬ</h4>
+            <h4 style="text-align: right; "> У вас есть <b> {{com_post_needpr|length}} </b> непринятых комментария</h4>
+            {% if com_post_needpr %}
+                {% for n in com_post_needpr %}
+                <a style="color: black" class="blog-entry1" href="{% url 'o_post' n.id %}">
+                    <div class="mb-2"style="border:thick double  #aaaaaa; padding:10px"  >
+                        <li class="comment">
+                            <div class="comment-body">
+                                <h3>название поста: "{{n.commentPost.title}}"</h3>
+                                <h4> автор поста:{{n.commentUser.username}} ({{n.commentUser.first_name}} {{n.commentUser.last_name}})</h4>
+                                <div class="meta" style="color: grey">
+                                    <p style="text-align: left; paddind-left: 5px;">
+                                        дата создания поста:{{n.dataCreation}}<br>
+                                        дата создания комментария:{{n.dataCreation}}
+                                    </p>   
+                                </div>
+                                <p>{{n.content}}</p>
+                                <a style="border: solid 1px; padding: 5px; margin-right: 20px" href="{% url 'com_pr' n.id %}" >ПРИНЯТЬ КОММЕНТАРИЙ </a>
+                                <a style="border: solid 1px; padding: 5px" href="{% url 'com_del' n.id %}" >УДАЛИТЬ КОММЕНТАРИЙ </a>
+                            </div>   
+                        </li>
+                    </div>
+                </a >
+                {%endfor%}
+               
+             
+            {% else %}
+                <h4 style="text-align:right; padding-right: 30px;"> нет комментариев для одобрения </h4>
+            {% endif %}
+            </div>
+            
+            <div class="mb-2"style="border:thick double  #555555; padding: 10px;"  >
+            <h4 style="text-align:left; paddind-left: 5px;  "> ПРИНЯТЫЕ КОММЕНТАРИИ</h4>
+            <h4 style="text-align: right; "> У вас есть <b> {{com_post_pr|length}} </b> принятых комментария</h4>
+            {% if com_post_pr %}
+                {% for n in com_post_pr_p %}
+                    <div class="mb-2"style="border:thick double  #aaaaaa; padding:10px"  >
+                        <li class="comment">
+                            <div class="comment-body">
+                                <h3>название поста: "{{n.commentPost.title}}"</h3>
+                                <h4> автор поста:{{n.commentUser.username}} ({{n.commentUser.first_name}} {{n.commentUser.last_name}})</h4>
+                                <div class="meta" style="color: grey">
+                                    <p style="text-align: left; paddind-left: 5px;">
+                                        дата создания поста:{{n.dataCreation}}<br>
+                                        дата создания комментария:{{n.dataCreation}}
+                                    </p>   
+                                </div>
+                                <p>{{n.content}}</p>
+                                <p style="text-align: right">рейтинг: <b>{{n.rating}} </b></p>
+                            </div>   
+                        </li>
+                    </div>
+                {%endfor%}
+                {% include '../flatpages/parts/paginator.html' %}
+            {% else %}
+                <h4 style="text-align:right; padding-right: 30px;"> комментариев пока нет </h4>
+            {% endif %}
+
+
+        </div>
+        <div class="mb-2"style="border:thick double  #555555; padding: 10px;"  >
+            <h2 style="text-align: left; paddind-left: 5px;"> ВАШИ КОММЕНТАРИИ К ПОСТАМ</h2>
+            <h4 style="text-align: right; "> У вас есть <b> {{comments_user|length}} </b> комментария к постам</h4>
+            {% if comments_user %}
+                {% for n in comments_user_p %}
+                    <div class="mb-2"style="border:thick double  #aaaaaa; padding:10px"  >
+                        <li class="comment">
+                            <div class="comment-body">
+                                <h3>название поста: "{{n.commentPost.title}}"</h3>
+                                <h4> автор поста:{{n.commentUser.username}} ({{n.commentUser.first_name}} {{n.commentUser.last_name}})</h4>
+                                <div class="meta" style="color: grey">
+                                    <p style="text-align: left; paddind-left: 5px;">
+                                        дата создания поста:{{n.dataCreation}}<br>
+                                        дата создания комментария:{{n.dataCreation}}
+                                    </p>   
+                                </div>
+                                <p>{{n.content}}</p>
+                                <p style="text-align: right">рейтинг: <b>{{n.rating}} </b></p>
+                            </div>   
+                        </li>
+                    </div>
+                {%endfor%}
+                {% include '../flatpages/parts/paginator.html' %}
+            {% else %}
+                <h4 style="text-align:right; padding-right: 30px;"> Вы не оставляли комментариев </h4>
+            {% endif %}
+        </div>
+{% endblock main_content %}

@@ -1,0 +1,225 @@
+{% extends 'flatpages/default.html'%}
+{% load static %}
+
+{% load custom_filters %}
+
+
+
+{% block main_content %}
+
+
+<script>
+		function like(n){
+		   var patch = '{% url "l_post" 0 %}'.replace('0', n);
+		   $.ajax({
+				  type: "POST",
+				  url: patch,
+				  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+				  dataType: "json",
+				  success: function(response) {
+					   document.getElementById("like_count"+response.myid).innerHTML = response.likes_count
+					   document.getElementById("dislike_count"+response.myid).innerHTML = response.dislikes_count
+					   document.getElementById("like").src = "../../static/assets/images/like"+response.mark_li+".png"
+                	   document.getElementById("dislike").src = "../../static/assets/images/dislike"+response.mark_dli+".png"
+				   },
+				   error: function(rs, e) {
+				   }
+			 });
+		}
+		function dislike(n){
+		   var patch = '{% url "d_post" 0 %}'.replace('0', n);
+		   $.ajax({
+				  type: "POST",
+				  url: patch,
+				  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+				  dataType: "json",
+				  success: function(response) {
+					   document.getElementById("like_count"+response.myid).innerHTML = response.likes_count
+					   document.getElementById("dislike_count"+response.myid).innerHTML = response.dislikes_count
+					   document.getElementById("like").src = "../../static/assets/images/like"+response.mark_li+".png"
+                	   document.getElementById("dislike").src = "../../static/assets/images/dislike"+response.mark_dli+".png"
+				   },
+				   error: function(rs, e) {
+				   }
+			 });
+		}
+</script>
+
+
+
+
+
+
+                <div style="padding-left: 80px">
+                    <h1 >{{one_post.title.upper}} ({{one_post.category}})<br>
+                        <a style="border-bottom: dashed 1px; padding: 5px" href="profile/{{one_post.author.user.id}}" >
+							
+							Геймер: {{one_post.author.user.username}} {{one_post.author.user.first_name}} {{one_post.author.user.last_name}}{{one_post.author.user.id}}</h1>
+						</a>
+					</div>
+                <div class="row" style="padding:0px 50px">
+	    			<div class="col-lg-8 px-md-5 py-5">
+	    				<div class="row">
+							{% if one_post.photo  %}
+                           		<img style="width:100%; margin:auto;" alt="фото товара" class="img-fluid" src='{{one_post.photo.url}}'>
+                        	{% else %}
+                            	<img style="width:100%; margin:auto;" src='../../media/image_photo/no_foto.jpg'>
+                        	{% endif%}
+	    		
+                            {% if one_post.video %}
+                                <video  width ="400" controls = "controls" preload="none" ></video>
+                            {% else %}
+                                <p></p>
+                            {% endif%}
+                            
+		                    <p>
+								Дата опубликования: {{one_post.dataCreation}}<br>
+                                Редактировано: {{one_post.dataUpdate}}<br>
+								Пост №: {{one_post.id}}<br>
+								РЕЙТИНГ: {{one_post.rating}}<br>
+							</p>
+						</div>
+		                
+						
+
+		                <div class="about-author d-flex p-4 bg-light desc">
+		                    <p>{{one_post.content|censor}}</p>
+		                </div>
+						
+						
+							
+		              	
+							<div style="display: flex; flex-direction: row-reverse; margin: 20px">
+
+								<button style="width: 60px; height: 30px; background:none; border:none;" type="submit">
+									<input type=image  style="width: 25px; background:none; border:none;" onclick="dislike({{one_post.id}})"
+										   id="dislike" src='../../static/assets/images/dislike{{mark_dli}}.png' />
+									<span id="dislike_count{{one_post.id}}">{{ one_post.dislike_post.count }}</span>
+								</button>
+
+
+								<button style=" width: 60px; height: 30px; background:none; border:none;" type="submit">
+									<input type=image style="width: 25px; background:none; border:none;"  onclick="like({{one_post.id}})"
+										   id="like" src='../../static/assets/images/like{{mark_li}}.png' />
+									<span id="like_count{{one_post.id}}">{{ one_post.like_post.count }}</span>
+								</button>								
+						
+							</div>
+					
+						
+                        
+						<ul class="comment-list">
+		                    <div class="pt-5 mt-5">
+		                        <h3 class="mb-5 font-weight-bold">{{comment_post|length}} Комментария </h3>
+		                        {% if comment_post %}
+                                    {% for n in comment_post %}
+                      
+		                                <li class="comment">
+		                                    <div class="comment-body">
+		                                        <h3>{{n.commentUser.username}} ({{n.commentUser.first_name}} {{n.commentUser.last_name}})</h3>
+		                                        <div class="meta" style="color: grey">{{n.dataCreation}}</div>
+		                                            <p>{{n.content}}</p>
+
+													<div >
+														<p style="text-align: right; margin: 2px">РЕЙТИНГ: {{n.rating}}</p>
+													  
+														<div style="display: flex; flex-direction: row-reverse; margin: 2px">
+															
+															<form method="POST" action= "{% url 'd_com' n.id %}">
+																{% csrf_token %}
+																<input type='hidden' name='text' >
+																<button type="submit" style="width: 55px; height: 25px; background:none; border:none;">
+																	<img style="width:22px;" src='../../static/assets/images/dislike.png'>
+																	<span>{{n.dislike_com.count}}</span>
+																</button>
+															</form>		
+							
+															<form method="POST" action= "{% url 'l_com' n.id %}">
+																{% csrf_token %}
+																<input type='hidden' name='text' >
+																<button type="submit" style="width: 55px; height: 25px; background:none; border:none;">
+																	<img style="width:22px;" src='../../static/assets/images/like.png'>
+																	<span>{{n.like_com.count}}</span>
+																</button>
+															</form>	
+													
+														</div>
+													</div>	
+		                                    </div>
+		                                </li>
+                                    {%endfor%}
+                                {% else %}
+                                    <h4> Комментариев нет </h4>
+                                {% endif %}
+                            </div>
+                        </ul>
+		                
+                        <div class="comment-form-wrap pt-5" >
+							<h3 class="mb-5">Оставить комментарий</h3>
+							<form method="POST" action= "" enctype="multipart/form-data" class="p-3 p-md-4 bg-light">
+								{% csrf_token %}
+								
+								<input type="hidden" name="commentPost" id="commentPost_id" value="{{commentPost.id }}" > 
+								<input type="hidden" name="commentUser" id="commentUser_id" value="{{commentUser.id}}">
+								
+								<textarea name="content" id="content" cols="30" rows="10" class="form-control"></textarea>
+								<input type="submit" value="Добавить" class="btn  btn-primary my_btn">
+							</form>
+						</div>
+                    </div>
+			    		
+		
+	    			<div class="col-lg-4 sidebar ftco-animate bg-light pt-5">
+	                    <div class="sidebar-box pt-md-4">
+	                        <form action="#" class="search-form">
+	                            <div class="form-group">
+	                                <span class="icon icon-search"></span>
+	                                <input type="text" class="form-control" placeholder="Search">
+	                            </div>
+	                        </form>
+	                    </div>
+                   
+	                    
+                        <h3 class="sidebar-heading">Popular Articles</h3>
+	                    <div class="block-21 mb-4 d-flex">
+	                        <a class="blog-img mr-4" ></a>
+	                        <div class="text">
+	                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
+	                            <div class="meta">
+	                                <div><a href="#"><span class="icon-calendar"></span> Sept. 12, 2019</a></div>
+	                                <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
+	                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="block-21 mb-4 d-flex">
+	                        <a class="blog-img mr-4"></a>
+	                        <div class="text">
+	                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
+	                            <div class="meta">
+	                                <div><a href="#"><span class="icon-calendar"></span> Sept. 12, 2019</a></div>
+	                                <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
+	                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="block-21 mb-4 d-flex">
+	                        <a class="blog-img mr-4"></a>
+	                        <div class="text">
+	                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control</a></h3>
+	                            <div class="meta">
+	                                <div><a href="#"><span class="icon-calendar"></span> Sept. 12, 2019</a></div>
+	                                <div><a href="#"><span class="icon-person"></span> Dave Lewis</a></div>
+	                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+                </div>
+    
+                
+				
+	
+{% endblock main_content %}
+  
+

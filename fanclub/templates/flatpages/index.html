@@ -1,0 +1,68 @@
+{% extends 'flatpages/default.html'%}
+{% load custom_filters %}
+
+
+{% block main_content %}
+
+
+    <h2 style="color: black; text-align: right; margin-right: 50px;">{{time_now|date:'d M Y'}}<br><br></h2>
+    <h6 style="color: black; text-align: right; margin-right: 50px;">    всего объявлений: {{all}}</h6>
+    <h6 style="color: black; text-align: right; margin-right: 50px;">    объявлений на странице: {{board| length}}</h6>
+    <h1 id="colorlib-logo" style="margin-left:30px" >ОБЪЯВЛЕНИЯ</h1>
+   
+    {% if board %}
+        {% for n in board %}
+        <a style="color: black" href="{% url 'o_post' n.id %}">
+            <div class="col-md-4 " style="display: inline-block; vertical-align: top; max-width: 30%">
+                <div class="blog-entry"  >
+                    <div class="text p-4" >
+                        {% if n.photo  %}
+                            <img style="width:100%; margin:auto;" src='{{n.photo.url}}'>
+                        {% else %}
+                            <img style="width:100%; margin:auto;" src='../../media/image_photo/no_foto.jpg'>
+                        {% endif%}
+                        
+                        {% if one_post.video %}
+                            <video  width ="400" controls = "controls" preload="none" ></video>
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                        
+                        <h3 class="mb-2">название: {{n.title}}</h3>
+                        <h3 class="mb-2">автор: {{n.author.user.username}}</h3>
+                        <div class="meta-wrap">
+                            <p class="meta" >
+                                <span style="color: #555555"><i class="icon-calendar mr-2" style="color: #555555"></i>{{n.dataCreation|date:'d M Y'}}</span><br>
+                                <span style="color: #555555"><i class="icon-folder-o mr-2"style="color: #555555" ></i>{{n.category}}</span><br>
+                                <span style="color: #555555"><i class="icon-comment2 mr-2" style="color: #555555"></i>Рейтинг поста: {{n.rating}} </span><br>
+                                <span style="color: #555555;"><i class="icon-comment2 mr-2" style="color: #555555;  "></i>Отклики: {{n.com_count}}</span>
+                            </p>
+                        </div>
+                        <p class="mb-4">{{n.content|truncatewords:10|censor}}</p>
+                        <p><a style="color: black" href="{% url 'o_post' n.id %}"class="btn-custom">Подробнее <span class="ion-ios-arrow-forward"></span></a></p>
+                      
+                        {% if one_post.file %}
+                            <div></div>
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+       
+        {%endfor%}
+        <br>
+        <!-- код пагинатора на подключение шаблона с этим кодом -->
+        <div style="text-align: center;" >{% include 'flatpages/parts/paginator.html' %}</div>
+    {% else %}
+        <h4> Объявлений нет </h4>
+    {% endif %}  
+            
+
+
+
+
+
+
+{% endblock main_content %}

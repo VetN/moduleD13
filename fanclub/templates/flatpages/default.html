@@ -1,0 +1,151 @@
+
+<!--{% load cache %}-->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <title>FanClub MaG</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'assets/css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/css/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/css/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/jquery.timepicker.css' %}">
+
+    
+    <link rel="stylesheet" href="{% static 'assets/css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  </head>
+  <body>
+
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight img" style="background-image: url(../../static/assets/images/sidebar.jpg);">
+			<h1 id="colorlib-logo" class="mb-4"><a href="{% url 'home' %}">MaG</a></h1><br><br>
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li class="colorlib-active"><a href="{% url 'home' %}">ГЛАВНАЯ</a></li>
+					<li class="colorlib-active"><a href="{% url 'search' %}">ПОИСК ОБЪЯВЛЕНИЙ</a></li>
+					<li><a href="{% url 'protect:personal' %}">СТРАНИЦА ГЕЙМЕРА</a></li>
+					<li><a href="{% url 'add_post' %}">ПОДАТЬ ОБЪЯВЛЕНИЕ</a></li>
+					
+				</ul><br><br>
+				
+			</nav>
+
+			
+				<div class="mb-4">
+					<div style="color: white; text-align: center; border: 0.8px solid grey; padding: 1px;"> 
+						
+						{% for k  in cat.items %}
+						<ul class="categories">
+							<li style=" padding: 1px; margin: 1px;">{{k}} </li>
+							<p></p>
+						{% endfor %}
+					</div>	
+				<div class="colorlib-footer">
+					<p class="pfooter" style="text-align:center">
+	  					Copyright &copy;<script>document.write(new Date().getFullYear());</script><br>
+						All rights reserved<br>
+						Amella & Ness <i class="icon-heart" aria-hidden="true"></i>
+					</p>
+				</div>
+			</div>
+		</aside> 
+		<div id="colorlib-main">
+			<section class="ftco-section ftco-no-pt ftco-no-pb">
+				<div class="container" style="padding-left: 15px;">
+					
+		
+					{% block main_content %}
+
+					{% endblock main_content %}	
+
+
+					<div class="sidebar-box ftco-animate">
+						<h3 class="sidebar-heading">Tag Cloud</h3>
+							<ul class="tagcloud">
+			  					<a href="#" class="tag-cloud-link">animals</a>
+			  					<a href="#" class="tag-cloud-link">human</a>
+			  					<a href="#" class="tag-cloud-link">people</a>
+			 					<a href="#" class="tag-cloud-link">cat</a>
+			  					<a href="#" class="tag-cloud-link">dog</a>
+			  					<a href="#" class="tag-cloud-link">nature</a>
+			  					<a href="#" class="tag-cloud-link">leaves</a>
+			  					<a href="#" class="tag-cloud-link">food</a>
+							</ul>
+		  			</div>
+
+		  
+		  			<div class="sidebar-box subs-wrap img px-4 py-5">
+			  			<div class="overlay"></div>
+				  			<h3 class="mb-4 sidebar-heading">Newsletter</h3>
+					  		<p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia</p>
+						  	<form action="#" class="subscribe-form">
+						  		<div class="form-group">
+							  		<input type="text" class="form-control" placeholder="Email Address">
+							  		<input type="submit" value="Subscribe" class="mt-2 btn btn-white submit">
+						  		</div>
+						  	</form>
+			  		</div>
+
+		  			<div class="sidebar-box ftco-animate">
+			  			<h3 class="sidebar-heading">Archives</h3>
+						<ul class="categories">
+							<li><a href="#">December 2018 <span>(10)</span></a></li>
+			  				<li><a href="#">September 2018 <span>(6)</span></a></li>
+			  				<li><a href="#">August 2018 <span>(8)</span></a></li>
+			  				<li><a href="#">July 2018 <span>(2)</span></a></li>
+			  				<li><a href="#">June 2018 <span>(7)</span></a></li>
+			  				<li><a href="#">May 2018 <span>(5)</span></a></li>
+						</ul>
+		  			</div>
+
+
+		  			<div class="sidebar-box ftco-animate">
+						<h3 class="sidebar-heading">Paragraph</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut.</p>
+		  			</div>
+	  
+	  			</div>
+  			</section>
+		</div>		
+	</div>
+
+		
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'assets/js/popper.min.js' %}"></script>
+  <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'assets/js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'assets/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'assets/js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'assets/js/aos.js' %}"></script>
+  <script src="{% static 'assets/js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'assets/js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'assets/js/google-map.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+    
+  </body>
+</html>

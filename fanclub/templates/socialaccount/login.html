@@ -1,0 +1,39 @@
+{% extends "socialaccount/base.html" %}
+{% load i18n %}
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block content %}
+<div class="container" data-aos="fade-up" >
+  <div class=" align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="100%">
+    <div class="icon-box" style="color:black>
+     
+        <div class="get-started-btn_f scrollto " >
+          <h2>{% trans "ВХОД" %}</h2>
+
+          <p>
+         
+              {% if process == "connect" %}
+                <h2 >{% blocktrans with provider.name as provider %}ПОДКЛЮЧЕНИЕ {{ provider }}{% endblocktrans %}</h2>
+                <p>{% blocktrans with provider.name as provider %}Вы собираетесь подключить новый сторонний аккаунт {{ provider }}.{% endblocktrans %}</p>
+              
+                {% else %}
+                <h2>{% blocktrans with provider.name as provider %}Войти через: {{ provider }}{% endblocktrans %}</h2>
+                <p>{% blocktrans with provider.name as provider %}Вы собираетесь войти, используя учетную запись {{ provider }}.{% endblocktrans %}</p>
+              
+              {% endif %}
+
+              <form method="post">
+                {% csrf_token %}
+                  <button type="submit" style="margin-top:30px; padding: 15px 30px">{% trans "Continue" %}</button>
+              </form>
+           
+            </p>
+          </div>
+        </div>
+    
+    </div>
+  </div>
+{% endblock%}
+
+
+
+

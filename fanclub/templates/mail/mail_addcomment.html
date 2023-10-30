@@ -1,0 +1,16 @@
+{% extends "mail/base_mail.html" %}
+{% load custom_filters %}
+{% block main_content %}
+    <div style="text-align:center">
+        <div style="color:black">
+            <h2> {{ user.first_name}} ({{ user.username}} )!</h2>
+            <h4>К вашему посту {{post.title }} появился новый комментарий от 
+                {{com.commentUser.first_name}} {{com.commentUser.last_name}} ({{com.commentUser.username}})! </h4>
+            <p>Тест комментария(отрывок):" {{com.preview}} "</p>
+            <p> Вам надо перейти по ссылке и принять или отклонить комментарий.</p>         
+            <a href="http://127.0.0.1:8000{% url 'protect:personal' %}"> Перейти к комментарию</a>
+
+          
+       
+    </div>
+{% endblock main_content %}

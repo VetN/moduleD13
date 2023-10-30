@@ -1,0 +1,15 @@
+{% extends 'flatpages/default.html'%}
+{% load custom_filters %}
+
+
+{% block main_content %}
+
+<div class="comment-form-wrap pt-5" >
+    <form method="POST" enctype="multipart/form-data" class="p-3 p-md-4 bg-light">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input class="get-started-btn scrollto" style="background: none; color: black; margin-top:30px;"  type="submit" value="Редактировать профиль"> 
+    </form>
+</div>
+
+{% endblock main_content %}

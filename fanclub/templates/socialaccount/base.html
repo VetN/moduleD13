@@ -1,0 +1,23 @@
+{% extends 'flatpages/default.html'%}
+{% block main_content %}      
+<!DOCTYPE html>
+<html>
+
+    <body>
+      
+        {% block body %}
+        <div class="container" data-aos="fade-up" >
+            <div  style="display: inline-block; vertical-align: top; ">
+                <div class="text p-4" >
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+            </div>
+        </div>
+        {% endblock body %}
+        
+        {% block extra_body %}
+        {% endblock extra_body %}
+    </body>
+</html>    
+{% endblock main_content %}    
